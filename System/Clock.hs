@@ -58,11 +58,11 @@ instance Storable TimeSpec where
   alignment _ = 1
   poke t v    = do
     let i :: Ptr Int = castPtr t
-    i |^ 0 $! sec  v
-    i |^ 1 $! nsec v
+    pokeElemOff i 0 $! sec v
+    pokeElemOff i 1 $! nsec v
   peek t      = do
     let i :: Ptr Int = castPtr t
-    TimeSpec <$> i |. 0 <*> i |. 1
+    TimeSpec <$> peekElemOff i 0 <*> peekElemOff i 1
 
 normalize :: TimeSpec -> TimeSpec
 normalize (TimeSpec xs xn) =
@@ -148,7 +148,3 @@ call read_ = do
   t <- peek x
   free      x
   return    t
-
--- Allocation and pointer operations
-{-# INLINE (|.) #-}; (|.)::Storable a=>Ptr a -> Int -> IO a         ; (|.) a i   = peekElemOff a i
-{-# INLINE (|^) #-}; (|^)::Storable a=>Ptr a -> Int ->    a -> IO (); (|^) a i v = pokeElemOff a i v
