@@ -69,12 +69,11 @@ instance Num TimeSpec where
       in TimeSpec (fromInteger q) (fromInteger r)
 
 instance Ord TimeSpec where
-  compare (TimeSpec xs xn) (TimeSpec ys yn) = 
-    if      xs > ys then GT
-    else if xs < ys then LT
-    else if xn > yn then GT
-    else if xn < yn then LT
-    else EQ
+  compare (TimeSpec xs xn) (TimeSpec ys yn)
+    | EQ == ordering = compare xn yn
+    | otherwise = ordering
+    where
+      ordering = compare xs ys
 
 -- | The 'getTime' function shall return the current value for the
 --   specified clock.
