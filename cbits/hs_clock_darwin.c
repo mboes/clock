@@ -3,7 +3,7 @@
 #include <mach/clock.h>
 #include <mach/mach.h>
 
-void hs_clock_darwin_gettime(struct timespec *ts)
+void hs_clock_darwin_gettime(clock_id_t clock, struct timespec *ts)
 {
 	// OS X does not have clock_gettime, use clock_get_time
 	// see http://stackoverflow.com/questions/11680461/monotonic-clock-on-osx
@@ -16,7 +16,7 @@ void hs_clock_darwin_gettime(struct timespec *ts)
 	ts->tv_nsec = mts.tv_nsec;
 }
 
-void hs_clock_darwin_getres(struct timespec *ts)
+void hs_clock_darwin_getres(clock_id_t clock, struct timespec *ts)
 {
 	clock_serv_t cclock;
 	int nsecs;
